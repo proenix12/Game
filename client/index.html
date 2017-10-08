@@ -13,18 +13,22 @@
 <body>
 <div id="load" class="loader"></div>
 <main id="main">
-    <canvas id="ctx" width="500" height="500" style="border:1px solid #F3F3F3;"></canvas>
+    <canvas id="ctx" width="1000" height="500" style="border:3px solid #000000;"></canvas>
 </main>
 <script type="text/javascript">
     var ctx = document.getElementById("ctx").getContext('2d');
-    ctx.font = '30ox Arial';
+    ctx.font = '30px Arial';
 
-    const socket = io('http://localhost:3000');
+    const socket = io('http://188.124.95.40:3000');
 
     socket.on('newPositions',function(data){
-        ctx.clearRect(0,0,500,500);
-        for(var i = 0 ; i < data.length; i++)
-            ctx.fillText(data[i].number, data[i].x, data[i].y);
+        ctx.clearRect(0,0,1000,500);
+        for(var i = 0 ; i < data.player.length; i++){
+            ctx.fillText(data.player[i].number, data.player[i].x, data.player[i].y);
+        }
+        for(var i = 0 ; i < data.bullet.length; i++){
+            ctx.fillRect(data.bullet[i].x-5, data.bullet[i].y-5, 10, 10);
+        }
     });
 
     document.onkeydown =function (event) {
