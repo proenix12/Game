@@ -139,6 +139,12 @@ var Bullet = function (angle) {
             self.toRemove = true;
 
         super_update();
+        for(var i in Player.list){
+            var p = Player.list[i];
+            if(self.getDistance(p) < 32 && self.parent !== p.id ){
+                self.toRemove = true;
+            }
+        }
     };
     Bullet.list[self.id] = self;
     return self;
@@ -186,7 +192,7 @@ var Attack = function (parent, angle) {
             }
         }
     };
-    Bullet.list[self.id] = self;
+    Attack.list[self.id] = self;
     return self;
 };
 Attack.list = {};
@@ -196,7 +202,7 @@ Attack.update = function () {
     var pack = [];
     for (var i in Attack.list) {
         var attack = Attack.list[i];
-        if(Attack.toRemove)
+        if(attack.toRemove)
             delete Attack.list[i];
         attack.update();
         pack.push({
