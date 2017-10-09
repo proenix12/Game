@@ -39,6 +39,7 @@ var Entity = function () {
 var Player = function (id) {
     var self = Entity();
     self.id = id;
+    self.x = 1;
     self.number = "" + Math.floor(10 * Math.random());
     self.pressingRight = false;
     self.pressingLeft = false;
@@ -64,23 +65,25 @@ var Player = function (id) {
     };
 
     self.updateSpd = function () {
-        if(self.pressingRight)
+        if(self.pressingRight) {
             self.spdX = self.maxSpd;
-        else if(self.pressingLeft)
+        } else if(self.pressingLeft) {
             self.spdX = -self.maxSpd;
-        else
+        } else {
             self.spdX = 0;
+        }
 
-        if(self.pressingUp)
+        if(self.pressingUp) {
             self.spdY = -self.maxSpd;
-        else if(self.pressingDown)
+        } else if(self.pressingDown) {
             self.spdY = self.maxSpd;
-        else
+        } else {
             self.spdY = 0;
-    }
+        }
+    };
     Player.list[id] = self;
     return self;
-}
+};
 Player.list = {};
 
 Player.onConnect = function (socket) {
@@ -126,24 +129,39 @@ Player.update = function () {
 
 var Monster = function (angle) {
     var self = Entity();
-    self.id = Math.random();
-    self.spdX = Math.cos(angle/180*Math.PI) * 10;
-    self.spdY = Math.sin(angle/180*Math.PI) * 10;
+    self.id = 1;
+    self.name = 'Monster';
+    self.maxSpd = 10;
+    self.pressingAttack = false;
+    //self.spdX = Math.cos(angle/180*Math.PI) * 10;
+    //self.spdY = Math.sin(angle/180*Math.PI) * 10;
 
-    self.timer = 0;
-    self.toRemove = false;
+    // self.timer = 0;
+    // self.toRemove = false;
+
     var super_update = self.update;
-    self.update = function(){
-        if(self.timer++ > 30)
-            self.toRemove = true;
+    self.update = function() {
+         if(self.timer++ > 30) {
+             self.toRemove = true;
+         }
 
         super_update();
+        if(self.pressingAttack){
+            self.attackAction(Math.cos(angle/180*Math.PI) * 10);
+        }
+    };
+
         for(var i in Player.list){
             var p = Player.list[i];
-            if(self.getDistance(p) < 32 && self.parent !== p.id ){
-                self.toRemove = true;
+
+            if(self.getDistance(p) < 300 && self.parent !== p.id ){
+                self.pressingAttack = true;
             }
-        }
+            self.attackAction = function () {
+                var att = Attack(self.id, angle);
+                att.x = self.x;
+                att.y = self.y;
+            };
     };
     Monster.list[self.id] = self;
     return self;
@@ -161,6 +179,7 @@ Monster.update = function () {
             delete Monster.list[i];
         monster.update();
         pack.push({
+            name: monster.name,
             x: monster.x,
             y: monster.y
         });
@@ -171,10 +190,10 @@ Monster.update = function () {
 var Attack = function (parent, angle) {
     var self = Entity();
     self.id = Math.random();
-    self.maxSpd = 20;
+    self.maxSpd = 10;
     self.parent = parent;
-    self.spdX = Math.cos(angle/180*Math.PI) * 10;
-    self.spdY = Math.sin(angle/180*Math.PI) * 10;
+    self.spdX = Math.cos(angle/180*Math.PI) * self.maxSpd;
+    self.spdY = Math.sin(angle/180*Math.PI) * self.maxSpd;
 
     self.timer = 0;
     self.toRemove = false;
