@@ -104,11 +104,11 @@ Player.onConnect = function (socket) {
     });
 
     console.log('New player: %s just connect', player.number);
-}
+};
 
 Player.onDisconnect = function (socket) {
     delete Player.list[socket.id];
-}
+};
 
 Player.update = function () {
     var pack = [];
