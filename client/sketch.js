@@ -7,8 +7,8 @@ socket.on('newPositions',function(data){
     for(var i = 0 ; i < data.player.length; i++){
         ctx.fillText(data.player[i].number, data.player[i].x, data.player[i].y);
     }
-    for(var i = 0 ; i < data.bullet.length; i++){
-        ctx.fillRect(data.bullet[i].x-5, data.bullet[i].y-5, 10, 10);
+    for(var i = 0 ; i < data.monster.length; i++){
+        ctx.fillRect(data.monster[i].x-5, data.monster[i].y-5, 10, 10);
     }
     for(var i = 0 ; i < data.attack.length; i++){
         ctx.fillRect(data.attack[i].x-5, data.attack[i].y-5, 10, 10);
