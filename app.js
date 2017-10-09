@@ -124,7 +124,7 @@ Player.update = function () {
     return pack;
 }
 
-var Bullet = function (angle) {
+var Monster = function (angle) {
     var self = Entity();
     self.id = Math.random();
     self.spdX = Math.cos(angle/180*Math.PI) * 10;
@@ -145,24 +145,24 @@ var Bullet = function (angle) {
             }
         }
     };
-    Bullet.list[self.id] = self;
+    Monster.list[self.id] = self;
     return self;
 };
-Bullet.list = {};
+Monster.list = {};
 
-Bullet.update = function () {
+Monster.update = function () {
     if(Math.random() < 0.1){
-        Bullet(Math.random()*360);
+        Monster(Math.random()*360);
     }
     var pack = [];
-    for (var i in Bullet.list) {
-        var bullet = Bullet.list[i];
-        if(bullet.toRemove)
-            delete Bullet.list[i];
-        bullet.update();
+    for (var i in Monster.list) {
+        var monster = Monster.list[i];
+        if(monster.toRemove)
+            delete Monster.list[i];
+        monster.update();
         pack.push({
-            x: bullet.x,
-            y: bullet.y
+            x: monster.x,
+            y: monster.y
         });
     }
     return pack;
@@ -239,7 +239,7 @@ io.sockets.on('connection', function (socket) {
 setInterval(function () {
     var pack = {
         player: Player.update(),
-        bullet: Bullet.update(),
+        monster: Monster.update(),
         attack: Attack.update()
     }
 
