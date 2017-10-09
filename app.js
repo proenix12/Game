@@ -146,8 +146,11 @@ var Monster = function (angle) {
          }
 
         super_update();
+        for(var i in Player.list){
+            var m = Player[i];
+        }
         if(self.pressingAttack){
-            self.attackAction(Math.cos(angle/180*Math.PI) * 10);
+            self.attackAction(Player.x);
         }
     };
 
