@@ -98,7 +98,6 @@ Player.onConnect = function (socket) {
             player.pressingDown = data.state;
         } else if(data.inputId === 'attack') {
             player.pressingAttack = data.state;
-            console.log('attak')
         } else if(data.inputId === 'mouseAngle'){
             player.mouseAngle = data.state;
         }
