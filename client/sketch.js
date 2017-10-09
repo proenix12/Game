@@ -1,3 +1,46 @@
+// Login
+var userform = $("#user-form");
+var username = $("#user-name").val();
+var userpass = $("#user-pass").val();
+var formlog = $("#form-log");
+var formreg = $("#form-reg");
+var gamediv = $("#game");
+
+$("#form-log").click(function (e) {
+    e.preventDefault();
+    socket.emit('singIn', {
+        username: $("#user-name").val(),
+        password: $("#user-pass").val()
+    });
+
+});
+$("#form-reg").click(function (e) {
+    e.preventDefault();
+    socket.emit('registerPlayer', {
+        username: $("#user-name").val(),
+        password: $("#user-pass").val()
+    });
+
+});
+//Check for valid account
+socket.on('singInResponse', function (data) {
+   if(data.success){
+       $("#user-form").css('display', 'none');
+       $("#game").css('display', 'block');
+   }else{
+       alert("Sing in unsuccessul.");
+   }
+});
+
+socket.on('singUpResponse', function (data) {
+    if(data.success){
+        alert("Sing up success.");
+    }else{
+        alert("Sing up unsuccessul.");
+    }
+});
+
+// Game
 var ctx = document.getElementById("ctx").getContext('2d');
 ctx.font = '30px Arial';
 
@@ -8,7 +51,8 @@ socket.on('newPositions',function(data){
         ctx.fillText(data.player[i].number, data.player[i].x, data.player[i].y);
     }
     for(var i = 0 ; i < data.monster.length; i++){
-        ctx.fillRect(data.monster[i].x-5, data.monster[i].y-5, 10, 10);
+        ctx.fillText(data.monster[i].name, data.monster[i].x, data.monster[i].y);
+        console.log(data.monster[i]);
     }
     for(var i = 0 ; i < data.attack.length; i++){
         ctx.fillRect(data.attack[i].x-5, data.attack[i].y-5, 10, 10);

@@ -12,19 +12,30 @@
 <body>
 <div id="load" class="loader"></div>
 
-
+<div id="user-form">
+    <form>
+        <div><input  type="text" id="user-name" name="user-name" placeholder="Account" /></div>
+        <div><input type="password" id="user-pass" name="user-pass"  placeholder="Password"/></div>
+        <div>
+            <input type="submit" id="form-log" name="form-reg" value="Login">
+            <input type="submit" id="form-reg" name="form-log" value="Register">
+        </div>
+    </form>
+</div>
 
 <main id="main">
+    <div id="game" class="game">
 
-    <canvas id="ctx" width="1000" height="500" style="border:3px solid #000000;"></canvas>
+        <canvas id="ctx" width="1000" height="500" style="border:3px solid #000000;"></canvas>
 
-    <div id="chat-text" style="width: 1000px; height: 100px;overflow: auto; border: 1px solid #000000">
-        <div>Hello!</div>
+        <div id="chat-text" style="width: 1000px; height: 100px;overflow: auto; border: 1px solid #000000">
+            <div>Hello!</div>
+        </div>
+
+        <form id="chat-form">
+            <input id="chat-input" type="text" style="width: 1000px;">
+        </form>
     </div>
-
-    <form id="chat-form">
-        <input id="chat-input" type="text" style="width: 1000px;">
-    </form>
 </main>
 
 <script type="text/javascript">const socket = io('http://188.124.95.40:3000');</script>

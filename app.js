@@ -203,12 +203,18 @@ var Attack = function (parent, angle) {
             self.toRemove = true;
         }
         super_update();
-        for(var i in Player.list){
+        for (var i in Player.list) {
             var p = Player.list[i];
-            if(self.getDistance(p) < 32 && self.parent !== p.id ){
+            if (self.getDistance(p) < 32 && self.parent !== p.id) {
                 self.toRemove = true;
             }
-        }
+        };
+        for (var i in Monster.list) {
+            var m = Monster.list[i];
+            if (self.getDistance(m) < 32 && self.parent !== m.id) {
+                self.toRemove = true;
+            }
+        };
     };
     Attack.list[self.id] = self;
     return self;
@@ -229,17 +235,49 @@ Attack.update = function () {
         });
     }
     return pack;
-}
+};
 
-
+var USERS = {
+    "george": "george",
+    "mitko":"mitko",
+    "mile":"mile"
+};
+var isValidPassword = function (data) {
+  return USERS[data.username] === data.password
+};
+var isUserNameTaken = function (data) {
+    return USERS[data.username];
+};
+var addUser = function (data) {
+    USERS[data.username] = data.password;
+};
 var io = require('socket.io')(server, {});
 io.sockets.on('connection', function (socket) {
 
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
+    // login system
+    socket.on('singIn', function (data) {
+        console.log(data.username);
+        if(isValidPassword(data)){
+            Player.onConnect(socket);
+            socket.emit('singInResponse', {success: true});
+        }else{
+            socket.emit('singInResponse', {success: false});
+        }
+    });
 
-    Player.onConnect(socket);
+    socket.on('registerPlayer', function (data) {
+
+        if(isUserNameTaken(data)){
+            socket.emit('singUpResponse', {success: false});
+        }else{
+            addUser(data);
+            socket.emit('singUpResponse', {success: true});
+        }
+    });
+
     socket.on('disconnect', function () {
         delete SOCKET_LIST[socket.id];
         Player.onDisconnect(socket);
